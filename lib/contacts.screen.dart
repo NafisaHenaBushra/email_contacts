@@ -47,7 +47,10 @@ class ContactsScreen extends StatelessWidget {
             ),
           ),
           floatingActionButton: DialogBox(
-            person: profileController.profileContent[6], 
+            name: 'Name',
+            email: 'example@gmail.com',
+            phoneNumber: '01***-******',
+            person: profileController.profileContent[lastIndex], 
             profileController: profileController, 
             onPressed: () {
               profileController.editProfile(profileController.profileContent[lastIndex]);

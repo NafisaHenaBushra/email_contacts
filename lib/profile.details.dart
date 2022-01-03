@@ -7,7 +7,7 @@ import 'profile.controller.dart';
 class ProfileDetails extends StatelessWidget {
   ProfileDetails({required this.index, Key? key}) : super(key: key);
 
-  final ProfileController profileController = Get.put(ProfileController());
+  ProfileController profileController = Get.put(ProfileController());
   final int index;
 
   @override
@@ -30,8 +30,17 @@ class ProfileDetails extends StatelessWidget {
             actions: [
               GetBuilder<ProfileController>(
                 init: ProfileController(),
-                builder: (_) => DialogBox(person: person, profileController: profileController, onPressed: () {Get.back();
-                profileController.refresh();},),
+                builder: (_) => DialogBox(
+                  person: person, 
+                  name: person.name,
+                  email: person.email,
+                  phoneNumber: person.phoneNumber,
+                  profileController: profileController, 
+                  onPressed: () {
+                    Get.back();
+                    profileController.refresh();
+                  },
+                ),
               ),
             ],
             backgroundColor: Colors.transparent,
@@ -90,16 +99,22 @@ class ProfileDetails extends StatelessWidget {
 }
 
 class DialogBox extends StatelessWidget {
-  const DialogBox({
+  DialogBox({
     Key? key,
     required this.person,
     required this.profileController,
     required this.onPressed,
+    required this.name,
+    required this.email,
+    required this.phoneNumber,
   }) : super(key: key);
 
   final UserProfile person;
   final ProfileController profileController;
   final VoidCallback? onPressed;
+  String name;
+  String email;
+  String phoneNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -111,27 +126,27 @@ class DialogBox extends StatelessWidget {
             children: [
               InputSection(
                 onChanged: (value) {
-                  person.name = value;
-                  // name = value;
+                  // person.name = value;
+                  name = value;
                 },
-                inputText: person.name,
+                inputText: name,
                 icon: Icons.person,
                 
               ),
               InputSection(
                 onChanged: (value) {
-                  person.email = value;
-                  // email = value;
+                  // person.email = value;
+                  email = value;
                 },
-                inputText: person.email,
+                inputText: email,
                 icon: Icons.email,
               ),
               InputSection(
                 onChanged: (value) {
-                  person.phoneNumber = value;
-                  // phoneNumber = value;
+                  // person.phoneNumber = value;
+                  phoneNumber = value;
                 },
-                inputText: person.phoneNumber,
+                inputText: phoneNumber,
                 icon: Icons.phone,
               ),
             ],
