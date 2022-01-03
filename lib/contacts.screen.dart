@@ -50,7 +50,7 @@ class ContactsScreen extends StatelessWidget {
             person: profileController.profileContent[6], 
             profileController: profileController, 
             onPressed: () {
-              profileController.editProfile(profileController.profileContent[6]);
+              profileController.editProfile(profileController.profileContent[lastIndex]);
               Get.back();
               profileController.refresh();
             },
