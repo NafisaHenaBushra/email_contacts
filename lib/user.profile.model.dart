@@ -9,8 +9,8 @@ class UserProfile extends GetxController {
     required this.phoneNumber,
   });
   final int id;
-  late final String name;
-  late final String email;
-  final String image;
-  late final String phoneNumber;
+   String name;
+   String email;
+   String image;
+   String phoneNumber;
 }

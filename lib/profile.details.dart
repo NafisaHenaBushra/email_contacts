@@ -9,9 +9,6 @@ class ProfileDetails extends StatelessWidget {
 
   final ProfileController profileController = Get.put(ProfileController());
   final int index;
-  // late String inputName;
-  // late String inputEmail;
-  // late String inputPhoneNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -33,48 +30,8 @@ class ProfileDetails extends StatelessWidget {
             actions: [
               GetBuilder<ProfileController>(
                 init: ProfileController(),
-                builder: (_) => TextButton(
-                  onPressed: () {
-                    Get.defaultDialog(
-                      title: 'Edit',
-                      content: Column(
-                        children: [
-                          InputSection(
-                            onChanged: (value) {
-                              person.name = value;
-                            },
-                            inputText: person.name,
-                            icon: Icons.person,
-                          ),
-                          InputSection(
-                            onChanged: (value) {
-                              person.email = value;
-                            },
-                            inputText: person.email,
-                            icon: Icons.email,
-                          ),
-                          InputSection(
-                            onChanged: (value) {
-                              person.phoneNumber = value;
-                            },
-                            inputText: person.phoneNumber,
-                            icon: Icons.phone,
-                          ),
-                        ],
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          child: const Text('ok'),
-                        ),
-                      ],
-                      barrierDismissible: false,
-                    );
-                  },
-                  child: const Text('Edit'),
-                ),
+                builder: (_) => DialogBox(person: person, profileController: profileController, onPressed: () {Get.back();
+                profileController.refresh();},),
               ),
             ],
             backgroundColor: Colors.transparent,
@@ -132,8 +89,73 @@ class ProfileDetails extends StatelessWidget {
   
 }
 
+class DialogBox extends StatelessWidget {
+  const DialogBox({
+    Key? key,
+    required this.person,
+    required this.profileController,
+    required this.onPressed,
+  }) : super(key: key);
+
+  final UserProfile person;
+  final ProfileController profileController;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Get.defaultDialog(
+          title: 'Edit',
+          content: Column(
+            children: [
+              InputSection(
+                onChanged: (value) {
+                  person.name = value;
+                  // name = value;
+                },
+                inputText: person.name,
+                icon: Icons.person,
+                
+              ),
+              InputSection(
+                onChanged: (value) {
+                  person.email = value;
+                  // email = value;
+                },
+                inputText: person.email,
+                icon: Icons.email,
+              ),
+              InputSection(
+                onChanged: (value) {
+                  person.phoneNumber = value;
+                  // phoneNumber = value;
+                },
+                inputText: person.phoneNumber,
+                icon: Icons.phone,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: onPressed,
+              // () {
+                // Get.back();
+                // profileController.refresh();
+              // },
+              child: const Text('ok'),
+            ),
+          ],
+          barrierDismissible: false,
+        );
+      },
+      child: const Text('Edit'),
+    );
+  }
+}
+
 class InputSection extends StatelessWidget {
-  InputSection({Key? key, required this.onChanged, required this.inputText, required this.icon}) : super(key: key);
+  const InputSection({Key? key, required this.onChanged, required this.inputText, required this.icon}) : super(key: key);
 
   // final UserProfile person;
   final String inputText;

@@ -6,7 +6,8 @@ import 'profile.controller.dart';
 import 'profile.details.dart';
 
 class ContactsScreen extends StatelessWidget {
-  final ProfileController profileController = Get.put(ProfileController());
+  ProfileController profileController = Get.put(ProfileController());
+  int lastIndex = 0;
 
   ContactsScreen({Key? key}) : super(key: key);
 
@@ -21,28 +22,38 @@ class ContactsScreen extends StatelessWidget {
           ),
           body: GetBuilder<ProfileController>(
             init: ProfileController(),
-                builder: (_) => ListView.builder(
-                itemCount: profileController.profileContent.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final person = profileController.profileContent[index];
-                  return Card(
-                    child: TextButton(
-                      onPressed: () {
-                        Get.to(ProfileDetails(
-                          index: index,
-                        ),);
-                      },
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(person.image),
-                        ),
-                        title: Text(person.name),
-                        subtitle: Text(person.email),
+            builder: (_) => ListView.builder(
+              itemCount: profileController.profileContent.length,
+              itemBuilder: (BuildContext context, int index) {
+                var person = profileController.profileContent[index];
+                lastIndex = index;
+                return Card(
+                  child: TextButton(
+                    onPressed: () {
+                      Get.to(ProfileDetails(
+                        index: index,
+                      ),);
+                    },
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: NetworkImage(person.image),
                       ),
+                      title: Text(person.name),
+                      subtitle: Text(person.email),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
+            ),
+          ),
+          floatingActionButton: DialogBox(
+            person: profileController.profileContent[6], 
+            profileController: profileController, 
+            onPressed: () {
+              profileController.editProfile(profileController.profileContent[6]);
+              Get.back();
+              profileController.refresh();
+            },
           ),
         ),
       ),
