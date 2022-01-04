@@ -4,22 +4,8 @@ import 'user.profile.model.dart';
 
 class ProfileController extends GetxController {
 
-  // late TextEditingController nameEditingController, emailEditingController, phoneNumberEditingController;
-  // @override
-  // void onInit() async {
-  //   super.onInit();
-  //   nameEditingController = TextEditingController();
-  //   emailEditingController = TextEditingController();
-  //   phoneNumberEditingController = TextEditingController();
-  // }
-
-  // void clearTextEditingControllers() {
-  //   nameEditingController.clear();
-  //   emailEditingController.clear();
-  //   phoneNumberEditingController.clear();
-  // }
-
-  RxList<UserProfile> profileContent  = [
+  RxList<UserProfile> profileContent  = RxList<UserProfile>(
+  [
     UserProfile(
       id: 1, 
       name: 'Aurora', 
@@ -62,10 +48,14 @@ class ProfileController extends GetxController {
       phoneNumber: '017xx-xxxxxx',
       image: 'https://lumiere-a.akamaihd.net/v1/images/ct_mulan_upcportalreskin_20694_78e0045d.jpeg',
     ),
-  ].obs;
+  ]);
 
-  void editProfile(UserProfile page) {
+  void addProfile(UserProfile page) {
     profileContent.add(page);
-    profileContent.refresh();
+    update();
+  }
+  void removeContact(int index) {
+    profileContent.removeAt(index);
+    update();
   }
 }

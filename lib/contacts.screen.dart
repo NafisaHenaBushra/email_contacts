@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_practice/profile.controller.dart';
+import 'package:flutter_practice/user.profile.model.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
+import 'constant.dart';
 import 'profile.controller.dart';
 import 'profile.details.dart';
 
+// ignore: must_be_immutable
 class ContactsScreen extends StatelessWidget {
-  ProfileController profileController = Get.put(ProfileController());
-  int lastIndex = 0;
+  final ProfileController profileController = Get.put(ProfileController());
+  late int lastIndex = 0;
 
   ContactsScreen({Key? key}) : super(key: key);
 
@@ -20,9 +22,8 @@ class ContactsScreen extends StatelessWidget {
             centerTitle: true,
             title: const Text('Gmail Contacts'),
           ),
-          body: GetBuilder<ProfileController>(
-            init: ProfileController(),
-            builder: (_) => ListView.builder(
+          body: Obx(
+            () => ListView.builder(
               itemCount: profileController.profileContent.length,
               itemBuilder: (BuildContext context, int index) {
                 var person = profileController.profileContent[index];
@@ -40,22 +41,97 @@ class ContactsScreen extends StatelessWidget {
                       ),
                       title: Text(person.name),
                       subtitle: Text(person.email),
+                      trailing: IconButton(
+                        onPressed: (){
+                          profileController.removeContact(index);
+                        }, 
+                        icon: const Icon(Icons.delete),
+                      ),
                     ),
                   ),
                 );
               },
             ),
           ),
-          floatingActionButton: DialogBox(
-            name: 'Name',
-            email: 'example@gmail.com',
-            phoneNumber: '01***-******',
-            person: profileController.profileContent[lastIndex], 
-            profileController: profileController, 
-            onPressed: () {
-              profileController.editProfile(profileController.profileContent[lastIndex]);
-              Get.back();
-              profileController.refresh();
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: (){
+              late String name;
+              late String email;
+              late String phoneNumber;
+              late String imageURL;
+              Get.defaultDialog(
+                title: 'Add Contacts',
+                content: Column(
+                  children: [
+                    TextField(
+                      textInputAction: TextInputAction.go,
+                      keyboardType: TextInputType.text,
+                      textAlign: TextAlign.center,
+                      decoration: kTextFieldDecoration.copyWith(
+                        hintText: 'Image URL',
+                        icon: const Icon(Icons.photo),
+                      ),
+                      onChanged: (value){
+                        imageURL = value;
+                      },
+                    ),
+                    TextField(
+                      textInputAction: TextInputAction.go,
+                      keyboardType: TextInputType.text,
+                      textAlign: TextAlign.center,
+                      decoration: kTextFieldDecoration.copyWith(
+                        hintText: 'Name',
+                        icon: const Icon(Icons.person),
+                      ),
+                      onChanged: (value){
+                        name = value;
+                      },
+                    ),
+                    TextField(
+                      textInputAction: TextInputAction.go,
+                      keyboardType: TextInputType.emailAddress,
+                      textAlign: TextAlign.center,
+                      decoration: kTextFieldDecoration.copyWith(
+                        hintText: 'example@mail.com',
+                        icon: const Icon(Icons.email),
+                      ),
+                      onChanged: (value){
+                        email = value;
+                      },
+                    ),
+                    TextField(
+                      textInputAction: TextInputAction.go,
+                      keyboardType: TextInputType.phone,
+                      textAlign: TextAlign.center,
+                      decoration: kTextFieldDecoration.copyWith(
+                        hintText: '01***-******',
+                        icon: const Icon(Icons.phone),
+                      ),
+                      onChanged: (value){
+                        phoneNumber = value;
+                      },
+                    ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: (){
+                      profileController.addProfile(
+                        UserProfile(
+                          email: email, 
+                          id: lastIndex+1, 
+                          image: imageURL, 
+                          name: name, 
+                          phoneNumber: phoneNumber,
+                        ),
+                      );
+                      Get.back();
+                    }, 
+                    child: const Text('Add'),
+                  ),
+                ],
+              );
             },
           ),
         ),

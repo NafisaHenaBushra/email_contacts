@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'constant.dart';
 import 'profile.controller.dart';
 
+// ignore: must_be_immutable
 class ProfileDetails extends StatelessWidget {
   ProfileDetails({required this.index, Key? key}) : super(key: key);
 
@@ -13,6 +14,7 @@ class ProfileDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var person = profileController.profileContent[index];
+    UserProfile singlePerson;
     return Material(
       child: SafeArea(
         child: Scaffold(
@@ -30,16 +32,65 @@ class ProfileDetails extends StatelessWidget {
             actions: [
               GetBuilder<ProfileController>(
                 init: ProfileController(),
-                builder: (_) => DialogBox(
-                  person: person, 
-                  name: person.name,
-                  email: person.email,
-                  phoneNumber: person.phoneNumber,
-                  profileController: profileController, 
+                builder: (_) => TextButton(
                   onPressed: () {
-                    Get.back();
-                    profileController.refresh();
+                    Get.defaultDialog(
+                      title: 'Edit',
+                      content: Column(
+                        children: [
+                          TextField(
+                            textInputAction: TextInputAction.go,
+                            keyboardType: TextInputType.text,
+                            textAlign: TextAlign.center,
+                            
+                            onChanged: (value) {
+                              person.name = value;
+                            },
+                            decoration: kTextFieldDecoration.copyWith(
+                              hintText: person.name,
+                              icon: const Icon(Icons.person),
+                            ),
+                          ),
+                          TextField(
+                            textInputAction: TextInputAction.go,
+                            keyboardType: TextInputType.text,
+                            textAlign: TextAlign.center,
+                            decoration: kTextFieldDecoration.copyWith(
+                              hintText: person.phoneNumber,
+                              icon: const Icon(Icons.email),
+                            ),
+                            onChanged: (value) {
+                              person.email = value;
+                            },
+                          ),
+                          TextField(
+                            textInputAction: TextInputAction.go,
+                            keyboardType: TextInputType.phone,
+                            textAlign: TextAlign.center,
+                            decoration: kTextFieldDecoration.copyWith(
+                              hintText: person.phoneNumber,
+                              icon: const Icon(Icons.phone),
+                            ),
+                            onChanged: (value) {
+                              person.phoneNumber = value;
+                            },
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed:
+                          () {
+                            Get.back();
+                              profileController.profileContent.refresh();
+                          },
+                          child: const Text('ok'),
+                        ),
+                      ],
+                      barrierDismissible: false,
+                    );
                   },
+                  child: const Text('Edit'),
                 ),
               ),
             ],
@@ -96,100 +147,6 @@ class ProfileDetails extends StatelessWidget {
     );
   }
   
-}
-
-class DialogBox extends StatelessWidget {
-  DialogBox({
-    Key? key,
-    required this.person,
-    required this.profileController,
-    required this.onPressed,
-    required this.name,
-    required this.email,
-    required this.phoneNumber,
-  }) : super(key: key);
-
-  final UserProfile person;
-  final ProfileController profileController;
-  final VoidCallback? onPressed;
-  String name;
-  String email;
-  String phoneNumber;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () {
-        Get.defaultDialog(
-          title: 'Edit',
-          content: Column(
-            children: [
-              InputSection(
-                onChanged: (value) {
-                  // person.name = value;
-                  name = value;
-                },
-                inputText: name,
-                icon: Icons.person,
-                
-              ),
-              InputSection(
-                onChanged: (value) {
-                  // person.email = value;
-                  email = value;
-                },
-                inputText: email,
-                icon: Icons.email,
-              ),
-              InputSection(
-                onChanged: (value) {
-                  // person.phoneNumber = value;
-                  phoneNumber = value;
-                },
-                inputText: phoneNumber,
-                icon: Icons.phone,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: onPressed,
-              // () {
-                // Get.back();
-                // profileController.refresh();
-              // },
-              child: const Text('ok'),
-            ),
-          ],
-          barrierDismissible: false,
-        );
-      },
-      child: const Text('Edit'),
-    );
-  }
-}
-
-class InputSection extends StatelessWidget {
-  const InputSection({Key? key, required this.onChanged, required this.inputText, required this.icon}) : super(key: key);
-
-  // final UserProfile person;
-  final String inputText;
-  final IconData icon;
-  final ValueChanged<String>? onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      textInputAction: TextInputAction.go,
-      keyboardType: TextInputType.text,
-      textAlign: TextAlign.center,
-      decoration: kTextFieldDecoration.copyWith(
-        hintText: inputText,
-        icon: Icon(icon),
-      ),
-      onChanged: onChanged,
-    );
-  }
 }
 
 class Section extends StatelessWidget {
